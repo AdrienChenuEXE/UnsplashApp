@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - UnsplashModel
-struct UnsplashModel: Codable {
+struct UnsplashModel: Codable, Identifiable {
     let id, slug: String
     let urls: Urls
     let user: User
@@ -28,70 +28,13 @@ struct Urls: Codable {
 // MARK: - User
 struct User: Codable {
     let id: String
-    let updatedAt: Date
-    let username, name, firstName, lastName: String
-    let twitterUsername: JSONNull?
-    let portfolioURL: String
-    let bio, location: String
-    let links: Links
-    let profileImage: ProfileImage
-    let instagramUsername: String
-    let totalCollections, totalLikes, totalPhotos, totalPromotedPhotos: Int
-    let acceptedTos, forHire: Bool
-    let social: Social
+    let name: String
 
     enum CodingKeys: String, CodingKey {
         case id
-        case updatedAt = "updated_at"
-        case username, name
-        case firstName = "first_name"
-        case lastName = "last_name"
-        case twitterUsername = "twitter_username"
-        case portfolioURL = "portfolio_url"
-        case bio, location, links
-        case profileImage = "profile_image"
-        case instagramUsername = "instagram_username"
-        case totalCollections = "total_collections"
-        case totalLikes = "total_likes"
-        case totalPhotos = "total_photos"
-        case totalPromotedPhotos = "total_promoted_photos"
-        case acceptedTos = "accepted_tos"
-        case forHire = "for_hire"
-        case social
+        case name
     }
 }
-
-// MARK: - Links
-struct Links: Codable {
-    let linksSelf, html, photos, likes: String
-    let portfolio, following, followers: String
-
-    enum CodingKeys: String, CodingKey {
-        case linksSelf = "self"
-        case html, photos, likes, portfolio, following, followers
-    }
-}
-
-// MARK: - ProfileImage
-struct ProfileImage: Codable {
-    let small, medium, large: String
-}
-
-// MARK: - Social
-struct Social: Codable {
-    let instagramUsername: String
-    let portfolioURL: String
-    let twitterUsername, paypalEmail: JSONNull?
-
-    enum CodingKeys: String, CodingKey {
-        case instagramUsername = "instagram_username"
-        case portfolioURL = "portfolio_url"
-        case twitterUsername = "twitter_username"
-        case paypalEmail = "paypal_email"
-    }
-}
-
-// MARK: - Encode/decode helpers
 
 class JSONNull: Codable, Hashable {
 

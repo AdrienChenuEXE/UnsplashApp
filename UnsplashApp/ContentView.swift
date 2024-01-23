@@ -8,39 +8,62 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var imageURLs = [
-        "https://images.unsplash.com/photo-1704146087769-ba4d31543936?ixid=M3w1NTc1NTR8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDYwMTQwODR8\\u0026ixlib=rb-4.0.3",
-        "https://images.unsplash.com/photo-1563473213013-de2a0133c100?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MzYyNDN8MHwxfGFsbHwyfHx8fHx8MXx8MTcwMzc1OTU1MXw&ixlib=rb-4.0.3&q=80&w=1080",
-        "https://images.unsplash.com/photo-1490349368154-73de9c9bc37c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MzYyNDN8MHwxfGFsbHwzfHx8fHx8MXx8MTcwMzc1OTU1MXw&ixlib=rb-4.0.3&q=80&w=1080",
-        "https://images.unsplash.com/photo-1495379572396-5f27a279ee91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MzYyNDN8MHwxfGFsbHw0fHx8fHx8MXx8MTcwMzc1OTU1MXw&ixlib=rb-4.0.3&q=80&w=1080",
-        "https://cdn.discordapp.com/attachments/955936878077562900/1197820770567602257/IMG_2320.png?ex=65bca886&is=65aa3386&hm=0b2a0b0eee46735bfd2ebe2aa082ae600d8b8a38e8e321872dcfbc8616964624&",
-        "https://images.unsplash.com/photo-1695653422715-991ec3a0db7a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MzYyNDN8MXwxfGFsbHw2fHx8fHx8MXx8MTcwMzc1OTU1MXw&ixlib=rb-4.0.3&q=80&w=1080",
-        "https://images.unsplash.com/photo-1547327132-5d20850c62b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MzYyNDN8MHwxfGFsbHw3fHx8fHx8MXx8MTcwMzc1OTU1MXw&ixlib=rb-4.0.3&q=80&w=1080",
-        "https://images.unsplash.com/photo-1492724724894-7464c27d0ceb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MzYyNDN8MHwxfGFsbHw4fHx8fHx8MXx8MTcwMzc1OTU1MXw&ixlib=rb-4.0.3&q=80&w=1080",
-        "https://images.unsplash.com/photo-1475694867812-f82b8696d610?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MzYyNDN8MHwxfGFsbHw5fHx8fHx8MXx8MTcwMzc1OTU1MXw&ixlib=rb-4.0.3&q=80&w=1080",
-        "https://images.unsplash.com/photo-1558816280-dee9521ff364?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MzYyNDN8MHwxfGFsbHwxMHx8fHx8fDF8fDE3MDM3NTk1NTF8&ixlib=rb-4.0.3&q=80&w=1080"
-    ]
+    // Déclaration d'une variable d'état, une fois remplie, elle va modifier la vue
+    @State var imageList: [UnsplashModel] = []
+    
+    // Déclaration d'une fonction asynchrone
+    func loadData() async {
+        // Créez une URL avec la clé d'API
+        let url = URL(string: "https://api.unsplash.com/photos?client_id=\(ConfigurationManager.instance.plistDictionnary.clientId)")!
+        
+        do {
+            // Créez une requête avec cette URL
+            let request = URLRequest(url: url)
+            
+            // Faites l'appel réseau
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            // Transformez les données en JSON
+            let deserializedData = try JSONDecoder().decode([UnsplashModel].self, from: data)
+            
+            // Mettez à jour l'état de la vue
+            imageList = deserializedData
+            
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
     let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 2)
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 8) {
-                    ForEach(imageURLs, id: \.self) { imageUrl in
-                        AsyncImage(url: URL(string: imageUrl)) { image in
-                            image
-                                .centerCropped()
-                                .aspectRatio(contentMode: .fill)
-                        } placeholder: {
-                            ProgressView()
+            VStack{
+                Button(action: {
+                    Task {
+                        await loadData()
+                    }
+                }, label: {
+                    Text("Load Data")
+                })
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 8) {
+                        ForEach(imageList, id: \.id) { imageUrl in
+                            AsyncImage(url: URL(string: imageUrl.urls.small)) { image in
+                                image
+                                    .centerCropped()
+                                    .aspectRatio(contentMode: .fill)
+                            } placeholder: {
+                                ProgressView()
+                            }
+                            .shadow(radius: 5)
                         }
-                        .shadow(radius: 5)
                     }
                 }
+                .navigationBarTitle("Feed", displayMode: .large)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding(.horizontal, 20)
             }
-            .navigationBarTitle("Feed", displayMode: .large)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .padding(.horizontal, 20)
         }
     }
 }
@@ -53,11 +76,11 @@ extension Image {
     func centerCropped() -> some View {
         GeometryReader { geo in
             self
-            .resizable()
-            .scaledToFill()
-            .frame(width: geo.size.width, height: geo.size.height)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .clipped()
+                .resizable()
+                .scaledToFill()
+                .frame(width: geo.size.width, height: geo.size.height)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipped()
         }
     }
 }
