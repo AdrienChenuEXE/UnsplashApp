@@ -11,6 +11,9 @@
 		F5D7BB4D2B5FEDBA00282F10 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D7BB4C2B5FEDBA00282F10 /* ContentView.swift */; };
 		F5D7BB4F2B5FEDBC00282F10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5D7BB4E2B5FEDBC00282F10 /* Assets.xcassets */; };
 		F5D7BB522B5FEDBC00282F10 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5D7BB512B5FEDBC00282F10 /* Preview Assets.xcassets */; };
+		F5D7BB5B2B6002CD00282F10 /* UnsplashModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D7BB5A2B6002CD00282F10 /* UnsplashModel.swift */; };
+		F5D7BB5D2B600C3F00282F10 /* PListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D7BB5C2B600C3F00282F10 /* PListManager.swift */; };
+		F5D7BB5F2B600C9100282F10 /* environment.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5D7BB5E2B600C9100282F10 /* environment.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +22,9 @@
 		F5D7BB4C2B5FEDBA00282F10 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F5D7BB4E2B5FEDBC00282F10 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F5D7BB512B5FEDBC00282F10 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F5D7BB5A2B6002CD00282F10 /* UnsplashModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashModel.swift; sourceTree = "<group>"; };
+		F5D7BB5C2B600C3F00282F10 /* PListManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PListManager.swift; path = "../../../Downloads/0d9d9bddbfa31f5659abd6e3ca6aca62-d09fbb886c995d3ac7816e5232d467ae23cf43a1/PListManager.swift"; sourceTree = "<group>"; };
+		F5D7BB5E2B600C9100282F10 /* environment.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = environment.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,8 +57,11 @@
 		F5D7BB492B5FEDBA00282F10 /* UnsplashApp */ = {
 			isa = PBXGroup;
 			children = (
+				F5D7BB5C2B600C3F00282F10 /* PListManager.swift */,
+				F5D7BB5E2B600C9100282F10 /* environment.plist */,
 				F5D7BB4A2B5FEDBA00282F10 /* UnsplashAppApp.swift */,
 				F5D7BB4C2B5FEDBA00282F10 /* ContentView.swift */,
+				F5D7BB5A2B6002CD00282F10 /* UnsplashModel.swift */,
 				F5D7BB4E2B5FEDBC00282F10 /* Assets.xcassets */,
 				F5D7BB502B5FEDBC00282F10 /* Preview Content */,
 			);
@@ -127,6 +136,7 @@
 			files = (
 				F5D7BB522B5FEDBC00282F10 /* Preview Assets.xcassets in Resources */,
 				F5D7BB4F2B5FEDBC00282F10 /* Assets.xcassets in Resources */,
+				F5D7BB5F2B600C9100282F10 /* environment.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,8 +147,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5D7BB5D2B600C3F00282F10 /* PListManager.swift in Sources */,
 				F5D7BB4D2B5FEDBA00282F10 /* ContentView.swift in Sources */,
 				F5D7BB4B2B5FEDBA00282F10 /* UnsplashAppApp.swift in Sources */,
+				F5D7BB5B2B6002CD00282F10 /* UnsplashModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
