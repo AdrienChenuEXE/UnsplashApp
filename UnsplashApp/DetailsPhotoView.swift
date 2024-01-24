@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DetailsPhotoView: View {
     @State var photo: UnsplashModel
-
+    
     // for picker selection and image resizing
     enum PickerSelection: Int {
         case regular = 0
@@ -18,12 +18,15 @@ struct DetailsPhotoView: View {
     }
     @State private var selectedPickerItem: PickerSelection = .full
     @State private var imageURL: URL?
-   
+    
     // Sizes for different picker selections
     private let regularSize: CGFloat = 200
     private let fullSize: CGFloat = 400
     private let smallSize: CGFloat = 100
     @State private var imageSize: CGFloat = 400
+    
+    // PopUp for download
+    @State var showAlert = false
     
     var body: some View {
         VStack {
@@ -32,7 +35,7 @@ struct DetailsPhotoView: View {
                     .font(.headline)
                 Link("@\(photo.user.username)", destination: URL(string: photo.user.links.html)!)
                     .font(.headline)
-
+                
                 if let profileImageURL = URL(string: photo.user.profileImage.medium) {
                     AsyncImage(url: profileImageURL) { image in
                         image
@@ -46,7 +49,7 @@ struct DetailsPhotoView: View {
                     }
                 }
             }
-
+            
             Picker(selection: $selectedPickerItem, label: Text("")) {
                 Text("Regular").tag(PickerSelection.regular)
                 Text("Full").tag(PickerSelection.full)
@@ -67,9 +70,9 @@ struct DetailsPhotoView: View {
                     imageURL = URL(string: photo.urls.small)
                 }
             }
-
+            
             Spacer()
-
+            
             AsyncImage(url: imageURL ?? URL(string: photo.urls.full)) { image in
                 image
                     .resizable()
@@ -78,14 +81,14 @@ struct DetailsPhotoView: View {
             } placeholder: {
                 ProgressView()
             }
-
+            
             Spacer()
-
+            
             Button(action: {
                 guard let imageUrl = imageURL else {
                     return
                 }
-
+                
                 getImage(from: imageUrl) { (image) in
                     if let image = image {
                         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
@@ -93,13 +96,23 @@ struct DetailsPhotoView: View {
                         print("Failed to load image for saving")
                     }
                 }
-            }) {
-                Label("Télécharger", systemImage: "arrow.up.square")
+                $showAlert.wrappedValue = true
+            }
+            ) {
+                Label("Télécharger", systemImage: "square.and.arrow.down")
                     .font(.headline)
                     .padding()
                     .cornerRadius(10)
             }
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Téléchargement effectué"),
+                    message: Text("L'image a été téléchargée avec succès."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
+        
     }
 }
 
@@ -120,34 +133,34 @@ func getImage(from url: URL, completion: @escaping (UIImage?) -> Void) {
 }
 
 /* DetailsPhotoView_Previews: PreviewProvider {
-    static var previews: some View {
-        DetailsPhotoView(
-            photo: UnsplashModel(
-                id: "",
-                slug: "",
-                urls: Urls(
-                    raw: "",
-                    full: "https://images.unsplash.com/photo-1682686581264-c47e25e61d95?crop=entropy\\u0026cs=srgb\\u0026fm=jpg\\u0026ixid=M3w1NTc1NTR8MXwxfGFsbHwxfHx8fHx8Mnx8MTcwNjA5Mjk4MHw\\u0026ixlib=rb-4.0.3\\u0026q=85",
-                    regular: "",
-                    small: "",
-                    thumb: "",
-                    smallS3: ""
-                ),
-                user: User(
-                    id: "",
-                    name: "L'auteur",
-                    username: "auteur",
-                    links: Links(
-                        html: ""
-                    ),
-                    profileImage: ProfileImage(
-                        small: "",
-                        medium: "",
-                        large: ""
-                    )
-                )
-            )
-        )
-    }
-}
-*/
+ static var previews: some View {
+ DetailsPhotoView(
+ photo: UnsplashModel(
+ id: "",
+ slug: "",
+ urls: Urls(
+ raw: "",
+ full: "https://images.unsplash.com/photo-1682686581264-c47e25e61d95?crop=entropy\\u0026cs=srgb\\u0026fm=jpg\\u0026ixid=M3w1NTc1NTR8MXwxfGFsbHwxfHx8fHx8Mnx8MTcwNjA5Mjk4MHw\\u0026ixlib=rb-4.0.3\\u0026q=85",
+ regular: "",
+ small: "",
+ thumb: "",
+ smallS3: ""
+ ),
+ user: User(
+ id: "",
+ name: "L'auteur",
+ username: "auteur",
+ links: Links(
+ html: ""
+ ),
+ profileImage: ProfileImage(
+ small: "",
+ medium: "",
+ large: ""
+ )
+ )
+ )
+ )
+ }
+ }
+ */
