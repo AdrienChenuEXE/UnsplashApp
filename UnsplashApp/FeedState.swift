@@ -20,19 +20,21 @@ class FeedState : ObservableObject{
             // TODO : gerer erreur : URL invalide
             return
         }
-
+        
+        DispatchQueue.main.async {
+            self.homeFeed = []
+        }
+        
         do {
-            // Effectue la requête réseau
-            let (data, _) = try await URLSession.shared.data(from: feedUrl)
-
-            // Décode les données reçues en tant que tableau d'UnsplashPhoto
-            let decoder = JSONDecoder()
-            let result = try decoder.decode([UnsplashModel].self, from: data)
-
-            // Assigner le résultat à la variable homeFeed
-            homeFeed = result
+            let request = URLRequest(url: feedUrl)
+            let (data, _) = try await URLSession.shared.data(for: request)
+            let deserializedData = try JSONDecoder().decode([UnsplashModel].self, from: data)
+            
+            await DispatchQueue.main.async {
+                self.homeFeed = deserializedData
+            }
         } catch {
-            print("Erreur lors de la récupération du feed : \(error)")
+            print("Error decoding JSON: \(error)")
         }
     }
     
@@ -44,17 +46,15 @@ class FeedState : ObservableObject{
         }
 
         do {
-            // Effectue la requête réseau
-            let (data, _) = try await URLSession.shared.data(from: feedUrl)
-
-            // Décode les données reçues en tant que tableau d'UnsplashPhoto
-            let decoder = JSONDecoder()
-            let result = try decoder.decode([UnsplashTopic].self, from: data)
-
-            // Assigner le résultat à la variable homeFeed
-            homeTopics = result
+            let request = URLRequest(url: feedUrl)
+            let (data, _) = try await URLSession.shared.data(for: request)
+            let deserializedData = try JSONDecoder().decode([UnsplashTopic].self, from: data)
+            
+            await DispatchQueue.main.async {
+                self.homeTopics = deserializedData
+            }
         } catch {
-            print("Erreur lors de la récupération des topics : \(error)")
+            print("Error decoding JSON: \(error)")
         }
     }
     
@@ -72,7 +72,6 @@ class FeedState : ObservableObject{
                 
                 await DispatchQueue.main.async {
                     self.topicFeed = deserializedData
-                    print(self.topicFeed.count)
                 }
             } catch {
                 print("Error decoding JSON: \(error)")

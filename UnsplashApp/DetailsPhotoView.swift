@@ -28,15 +28,17 @@ struct DetailsPhotoView: View {
                 Link("@\(photo.user.username)", destination: URL(string: photo.user.links.html)!)
                     .font(.headline)
 
-                if let profileImageURL = URL(string: photo.user.profileImage.medium),
-                   let imageData = try? Data(contentsOf: profileImageURL),
-                   let uiImage = UIImage(data: imageData) {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 40, height: 40)
-                        .clipShape(Circle())
-                        .padding()
+                if let profileImageURL = URL(string: photo.user.profileImage.medium) {
+                    AsyncImage(url: profileImageURL) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 40, height: 40)
+                            .clipShape(Circle())
+                            .padding()
+                    } placeholder: {
+                        ProgressView()
+                    }
                 }
             }
 
@@ -71,6 +73,21 @@ struct DetailsPhotoView: View {
             Spacer()
 
             Button(action: {
+                guard let imageUrl = imageURL else {
+                    // Handle the case where the image URL is nil
+                    return
+                }
+
+                // Fetch image data from the URL
+                getImage(from: imageUrl) { (image) in
+                    if let image = image {
+                        // Save the image to the photo library
+                        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                    } else {
+                        // Handle the case where the image couldn't be loaded
+                        print("Failed to load image for saving")
+                    }
+                }
             }) {
                 Label("Télécharger", systemImage: "arrow.up.square")
                     .font(.headline)
@@ -81,6 +98,24 @@ struct DetailsPhotoView: View {
     }
 }
 
+func getImage(from url: URL, completion: @escaping (UIImage?) -> Void) {
+    // Fetch image data from the URL
+    URLSession.shared.dataTask(with: url) { (data, response, error) in
+        if let data = data {
+            // Convert data to UIImage
+            if let image = UIImage(data: data) {
+                // Call the completion handler with the image
+                completion(image)
+            } else {
+                // Handle the case where the data couldn't be converted to an image
+                completion(nil)
+            }
+        } else {
+            // Handle the case where there was an error fetching the data
+            completion(nil)
+        }
+    }.resume()
+}
 
 /* DetailsPhotoView_Previews: PreviewProvider {
     static var previews: some View {
