@@ -10,16 +10,21 @@ import SwiftUI
 struct DetailsPhotoView: View {
     @State var photo: UnsplashModel
 
-    // Enum pour représenter les différentes sélections du Picker
+    // for picker selection and image resizing
     enum PickerSelection: Int {
         case regular = 0
         case full = 1
         case small = 2
     }
-
     @State private var selectedPickerItem: PickerSelection = .full
     @State private var imageURL: URL?
-
+   
+    // Sizes for different picker selections
+    private let regularSize: CGFloat = 200
+    private let fullSize: CGFloat = 400
+    private let smallSize: CGFloat = 100
+    @State private var imageSize: CGFloat = 400
+    
     var body: some View {
         VStack {
             HStack {
@@ -52,10 +57,13 @@ struct DetailsPhotoView: View {
             .onChange(of: selectedPickerItem) { _ in
                 switch selectedPickerItem {
                 case .regular:
+                    imageSize = regularSize
                     imageURL = URL(string: photo.urls.regular)
                 case .full:
+                    imageSize = fullSize
                     imageURL = URL(string: photo.urls.full)
                 case .small:
+                    imageSize = smallSize
                     imageURL = URL(string: photo.urls.small)
                 }
             }
@@ -66,6 +74,7 @@ struct DetailsPhotoView: View {
                 image
                     .resizable()
                     .scaledToFit()
+                    .frame(width: imageSize, height: imageSize)
             } placeholder: {
                 ProgressView()
             }
@@ -74,17 +83,13 @@ struct DetailsPhotoView: View {
 
             Button(action: {
                 guard let imageUrl = imageURL else {
-                    // Handle the case where the image URL is nil
                     return
                 }
 
-                // Fetch image data from the URL
                 getImage(from: imageUrl) { (image) in
                     if let image = image {
-                        // Save the image to the photo library
                         UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                     } else {
-                        // Handle the case where the image couldn't be loaded
                         print("Failed to load image for saving")
                     }
                 }
@@ -99,7 +104,6 @@ struct DetailsPhotoView: View {
 }
 
 func getImage(from url: URL, completion: @escaping (UIImage?) -> Void) {
-    // Fetch image data from the URL
     URLSession.shared.dataTask(with: url) { (data, response, error) in
         if let data = data {
             // Convert data to UIImage
@@ -107,11 +111,9 @@ func getImage(from url: URL, completion: @escaping (UIImage?) -> Void) {
                 // Call the completion handler with the image
                 completion(image)
             } else {
-                // Handle the case where the data couldn't be converted to an image
                 completion(nil)
             }
         } else {
-            // Handle the case where there was an error fetching the data
             completion(nil)
         }
     }.resume()
