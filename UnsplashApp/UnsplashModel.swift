@@ -29,11 +29,27 @@ struct Urls: Codable {
 struct User: Codable {
     let id: String
     let name: String
+    let username: String
+    let links : Links
+    let profileImage: ProfileImage
 
     enum CodingKeys: String, CodingKey {
         case id
         case name
+        case username
+        case links
+        case profileImage = "profile_image"
     }
+}
+
+// MARK: - Links
+struct Links: Codable {
+    let html: String
+}
+
+// MARK: - ProfileImage
+struct ProfileImage: Codable {
+    let small, medium, large: String
 }
 
 class JSONNull: Codable, Hashable {

@@ -7,32 +7,117 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    @StateObject var feedState = FeedState()
 
-    let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 2)
+struct ContentView: View {
+    @State var selectedPhoto: UnsplashModel?
+    @State var isDataLoaded = false
+    @StateObject var feedState = FeedState()
+    
+    let photoColumns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
+    let topicsRows = [
+        GridItem(.flexible())
+    ]
+    
+    func loadData() async {
+        await feedState.fetchHomeFeed()
+        await feedState.fetchHomeTopics()
+        isDataLoaded = true
+    }
+    
     
     var body: some View {
-        NavigationView {
-            VStack{
+        NavigationStack{
+            VStack {
                 Button(action: {
                     Task {
-                        await feedState.fetchHomeFeed()
+                        await loadData()
                     }
                 }, label: {
-                    Text("Load Data")
+                    Text("Load...")
                 })
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 8) {
-                        ForEach(feedState.homeFeed ?? [], id: \.id) { imageUrl in
-                            AsyncImage(url: URL(string: imageUrl.urls.small)) { image in
-                                image
-                                    .centerCropped()
-                                    .aspectRatio(contentMode: .fill)
-                            } placeholder: {
-                                ProgressView()
+                HStack{
+                    ScrollView(.horizontal) {
+                        LazyHGrid(rows: topicsRows, spacing: 30) {
+                            if !isDataLoaded {
+                                ForEach(0..<10, id: \.self) { _ in
+                                    VStack(alignment: .center) {
+                                        Rectangle()
+                                            .foregroundColor(.gray)
+                                            .aspectRatio(contentMode: .fill)
+                                            .shadow(radius: 5)
+                                            .opacity(0.3)
+                                            .frame(width: 100, height: 60)
+                                            .cornerRadius(12)
+                                        Rectangle()
+                                            .foregroundColor(.gray)
+                                            .aspectRatio(contentMode: .fill)
+                                            .shadow(radius: 5)
+                                            .opacity(0.5)
+                                            .frame(width: 70, height: 15)
+                                            .cornerRadius(3)
+                                    }
+                                }
+                            } else {
+                                ForEach(feedState.homeTopics, id: \.id) { topic in
+                                    NavigationLink(destination: FeedTopicView(topic: topic)) {
+                                        VStack(alignment: .center) {
+                                            AsyncImage(url: URL(string: topic.coverPhoto.urls.small)) { image in
+                                                image
+                                                    .centerCropped()
+                                                    .aspectRatio(contentMode: .fill)
+                                                    .cornerRadius(12)
+                                                    .shadow(radius: 5)
+                                            } placeholder: {
+                                                ProgressView()
+                                            }
+                                            .frame(width: 100, height: 60)
+                                            .cornerRadius(12)
+
+                                            Text(topic.title)
+                                                .foregroundColor(.blue)
+                                                .font(.caption)
+                                                .multilineTextAlignment(.center)
+                                                .padding(4)
+                                        }
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                }
                             }
-                            .shadow(radius: 5)
+                        }
+                        .padding(.horizontal, 15)
+                    }
+                }.padding(.vertical, 0)
+                ScrollView {
+                    LazyVGrid(columns: photoColumns, spacing: 8) {
+                        if !isDataLoaded {
+                            ForEach(0..<12, id: \.self) { _ in
+                                Rectangle()
+                                    .foregroundColor(.gray)
+                                    .aspectRatio(contentMode: .fill)
+                                    .cornerRadius(12)
+                                    .shadow(radius: 5)
+                                    .opacity(0.3)
+                            }
+                        } else {
+                            ForEach(feedState.homeFeed, id: \.id) { imageUrl in
+                                Button(action: {
+                                    selectedPhoto = imageUrl
+                                }) {
+                                    AsyncImage(url: URL(string: imageUrl.urls.small)) { image in
+                                        image
+                                            .centerCropped()
+                                            .aspectRatio(contentMode: .fill)
+                                    } placeholder: {
+                                        ProgressView()
+                                    }
+                                    .cornerRadius(12)
+                                    .shadow(radius: 5)
+                                }
+                            }
                         }
                     }
                 }
@@ -40,6 +125,9 @@ struct ContentView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal, 20)
             }
+        }
+        .sheet(item: $selectedPhoto) { photo in
+            DetailsPhotoView(photo: photo)
         }
     }
 }

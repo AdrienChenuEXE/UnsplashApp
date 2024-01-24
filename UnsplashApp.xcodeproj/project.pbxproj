@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F5B6A12E2B60FAE5001FD6B9 /* UnsplashTopic.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B6A12D2B60FAE5001FD6B9 /* UnsplashTopic.swift */; };
+		F5B6A1302B610570001FD6B9 /* FeedTopicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B6A12F2B610570001FD6B9 /* FeedTopicView.swift */; };
+		F5B6A1322B612062001FD6B9 /* DetailsPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B6A1312B612062001FD6B9 /* DetailsPhotoView.swift */; };
 		F5D7BB4B2B5FEDBA00282F10 /* UnsplashAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D7BB4A2B5FEDBA00282F10 /* UnsplashAppApp.swift */; };
 		F5D7BB4D2B5FEDBA00282F10 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D7BB4C2B5FEDBA00282F10 /* ContentView.swift */; };
 		F5D7BB4F2B5FEDBC00282F10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5D7BB4E2B5FEDBC00282F10 /* Assets.xcassets */; };
@@ -19,6 +22,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F5B6A12D2B60FAE5001FD6B9 /* UnsplashTopic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashTopic.swift; sourceTree = "<group>"; };
+		F5B6A12F2B610570001FD6B9 /* FeedTopicView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTopicView.swift; sourceTree = "<group>"; };
+		F5B6A1312B612062001FD6B9 /* DetailsPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsPhotoView.swift; sourceTree = "<group>"; };
 		F5D7BB472B5FEDBA00282F10 /* UnsplashApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnsplashApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5D7BB4A2B5FEDBA00282F10 /* UnsplashAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashAppApp.swift; sourceTree = "<group>"; };
 		F5D7BB4C2B5FEDBA00282F10 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -63,8 +69,11 @@
 			children = (
 				F5D7BB5C2B600C3F00282F10 /* PListManager.swift */,
 				F5D7BB5E2B600C9100282F10 /* environment.plist */,
+				F5B6A12D2B60FAE5001FD6B9 /* UnsplashTopic.swift */,
 				F5D7BB4A2B5FEDBA00282F10 /* UnsplashAppApp.swift */,
 				F5D7BB4C2B5FEDBA00282F10 /* ContentView.swift */,
+				F5B6A1312B612062001FD6B9 /* DetailsPhotoView.swift */,
+				F5B6A12F2B610570001FD6B9 /* FeedTopicView.swift */,
 				F5D7BB622B6018BD00282F10 /* UnsplashAPI.swift */,
 				F5D7BB642B601B2000282F10 /* FeedState.swift */,
 				F5D7BB5A2B6002CD00282F10 /* UnsplashModel.swift */,
@@ -155,7 +164,10 @@
 			files = (
 				F5D7BB5D2B600C3F00282F10 /* PListManager.swift in Sources */,
 				F5D7BB632B6018BD00282F10 /* UnsplashAPI.swift in Sources */,
+				F5B6A1322B612062001FD6B9 /* DetailsPhotoView.swift in Sources */,
 				F5D7BB4D2B5FEDBA00282F10 /* ContentView.swift in Sources */,
+				F5B6A12E2B60FAE5001FD6B9 /* UnsplashTopic.swift in Sources */,
+				F5B6A1302B610570001FD6B9 /* FeedTopicView.swift in Sources */,
 				F5D7BB652B601B2000282F10 /* FeedState.swift in Sources */,
 				F5D7BB4B2B5FEDBA00282F10 /* UnsplashAppApp.swift in Sources */,
 				F5D7BB5B2B6002CD00282F10 /* UnsplashModel.swift in Sources */,
